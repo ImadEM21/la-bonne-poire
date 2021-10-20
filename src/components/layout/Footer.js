@@ -4,7 +4,7 @@ import { faFacebookSquare, faInstagramSquare, faLinkedin, faTwitterSquare } from
 
 const Footer = () => {
   return (
-    <footer className="page-footer font-small pt-4 bg-primary">
+    <footer className="page-footer font-small pt-4 bg-primary mt-auto">
       <Container fluid className="text-center text-md-left">
         <Row>
           <Col md={6} className="mt-md-0 mt-3">
@@ -32,13 +32,13 @@ const Footer = () => {
 
             <ListGroup>
               <ListGroup.Item className="bg-transparent border-0">
-                <a href="#!" className="text-warning">Se connecter</a>
+                <a href="/login" className="text-warning">Se connecter</a>
               </ListGroup.Item>
               <ListGroup.Item className="bg-transparent border-0">
-                <a href="#!" className="text-warning">Créer un compte</a>
+                <a href="/signup" className="text-warning">Créer un compte</a>
               </ListGroup.Item>
               <ListGroup.Item className="bg-transparent border-0">
-                <a href="#!" className="text-warning">Contact</a>
+                <a href="/contact" className="text-warning">Contact</a>
               </ListGroup.Item>
             </ListGroup>
           </Col>
@@ -47,10 +47,10 @@ const Footer = () => {
 
             <ListGroup>
               <ListGroup.Item className="bg-transparent border-0">
-                <a href="#!" className="text-warning">Voir les annonces</a>
+                <a href="/advert" className="text-warning">Voir les annonces</a>
               </ListGroup.Item>
               <ListGroup.Item className="bg-transparent border-0">
-                <a href="#!" className="text-warning">Rechercher une annonce</a>
+                <a href="/search" className="text-warning">Rechercher une annonce</a>
               </ListGroup.Item>
             </ListGroup>
           </Col>
