@@ -54,3 +54,12 @@ input:focus, textarea:focus, select:focus {
 .text-justify {
     text-align: justify;
 }
+
+.cursor-none {
+    cursor: auto;
+}
+
+.input-disabled:focus-visible {
+    outline: none;
+}
+

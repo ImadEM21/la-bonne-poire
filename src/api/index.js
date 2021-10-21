@@ -32,13 +32,33 @@ export const deleteAdvert = (id, payload) => {
     return api.delete(`/adverts/${id}`, payload);
 };
 
+export const updateUser = (id, payload) => {
+    return api.put(`/users/${id}`, payload);
+};
+
+export const getUser = (id) => {
+    return api.get(`/users/${id}`);
+};
+
+export const getAdvert = id => {
+    return api.get(`/adverts/${id}`);
+};
+
+export const updateAdvert = (id, payload) => {
+    return api.put(`/adverts/${id}`, payload);
+};
+
 const apis = {
     getAdverts,
     signup,
     login,
     createForm,
     createAdvert,
-    deleteAdvert
+    deleteAdvert,
+    updateUser,
+    getUser,
+    getAdvert,
+    updateAdvert
 };
 
 export default apis;

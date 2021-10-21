@@ -8,6 +8,7 @@ import {
   Toast,
   ToastContainer,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import apis from "../../../api/index";
 
 const Login = ({ connexion }) => {
@@ -34,11 +35,7 @@ const Login = ({ connexion }) => {
     apis
       .login(payload)
       .then((res) => {
-        connexion(res.data.token);
-        localStorage.setItem(
-          process.env.REACT_APP_USER_ID_NAME,
-          res.data.userId
-        );
+        connexion(res.data.token, res.data.userId);
         localStorage.setItem(
           process.env.REACT_APP_USER_NAME,
           JSON.stringify(res.data.user)
@@ -68,7 +65,7 @@ const Login = ({ connexion }) => {
         </Col>
       </Row>
       <Row>
-        <Form className="mb-5" onSubmit={handleSubmit}>
+        <Form className="mb-3" onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="email">
               <Form.Label className="text-primary">Email*</Form.Label>
@@ -110,6 +107,16 @@ const Login = ({ connexion }) => {
           </Row>
           <small className="text-primary">(*) Champs obligatoire</small>
         </Form>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <p className="text-info">
+            Vous n'avez pas de compte ?{" "}
+            <Link to="/signup" className="text-primary">
+              Inscrivez vous !
+            </Link>
+          </p>
+        </Col>
       </Row>
       {error && (
         <ToastContainer position="top-end" className="position-fixed">

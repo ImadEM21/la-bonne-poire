@@ -8,7 +8,8 @@ import {
   Toast,
   ToastContainer,
 } from "react-bootstrap";
-import apis from '../../../api/index';
+import apis from "../../../api/index";
+import { Link } from "react-router-dom";
 
 const Signup = ({ connexion }) => {
   const [firstName, setFirstName] = useState("");
@@ -47,28 +48,32 @@ const Signup = ({ connexion }) => {
       return;
     }
     const payload = new FormData();
-    payload.append('firstName', firstName);
-    payload.append('lastName', lastName);
-    payload.append('email', email);
-    payload.append('phone', phone);
-    payload.append('birthDate', birthDate);
-    payload.append('password', password);
-    payload.append('avatar', avatar);
-    payload.append('role', 'user');
-    apis.signup(payload)
-    .then(res => {
-      connexion(res.data.token);
-      localStorage.setItem(process.env.REACT_APP_USER_ID_NAME, res.data.userId);
-      localStorage.setItem(process.env.REACT_APP_USER_NAME, JSON.stringify(res.data.user));
-      document.location.href = "/account";
-    })
-    .catch(error => {
-      console.error(error);
-      console.error(error.response);
-      if (error.response && error.response.data.message) setErrorMessage(error.response.data.message);
-      setError(true);
-      setDisableBtn(false);
-    });
+    payload.append("firstName", firstName);
+    payload.append("lastName", lastName);
+    payload.append("email", email);
+    payload.append("phone", phone);
+    payload.append("birthDate", birthDate);
+    payload.append("password", password);
+    payload.append("avatar", avatar);
+    payload.append("role", "user");
+    apis
+      .signup(payload)
+      .then((res) => {
+        connexion(res.data.token, res.data.userId);
+        localStorage.setItem(
+          process.env.REACT_APP_USER_NAME,
+          JSON.stringify(res.data.user)
+        );
+        document.location.href = "/account";
+      })
+      .catch((error) => {
+        console.error(error);
+        console.error(error.response);
+        if (error.response && error.response.data.message)
+          setErrorMessage(error.response.data.message);
+        setError(true);
+        setDisableBtn(false);
+      });
   };
 
   return (
@@ -225,6 +230,16 @@ const Signup = ({ connexion }) => {
           <small className="text-primary">(*) Champs obligatoire</small>
         </Form>
       </Row>
+      <Row>
+        <Col xs={12}>
+          <p className="text-info">
+            Vous avez déjà un compte ?{" "}
+            <Link to="/login" className="text-primary">
+              Connectez vous !
+            </Link>
+          </p>
+        </Col>
+      </Row>
       {passwordEquality && (
         <ToastContainer position="top-end" className="position-fixed">
           <Toast
@@ -238,7 +253,9 @@ const Signup = ({ connexion }) => {
             <Toast.Header closeButton>
               <strong className="me-auto">LaBonnePoire</strong>
             </Toast.Header>
-            <Toast.Body className="text-primary">Oops ! Les mots de passe ne sont pas identiques</Toast.Body>
+            <Toast.Body className="text-primary">
+              Oops ! Les mots de passe ne sont pas identiques
+            </Toast.Body>
           </Toast>
         </ToastContainer>
       )}
@@ -253,7 +270,11 @@ const Signup = ({ connexion }) => {
             <Toast.Header closeButton>
               <strong className="me-auto">LaBonnePoire</strong>
             </Toast.Header>
-            <Toast.Body className="text-primary">Oops ! Une erreur est survenue veuillez réessayer.<br />Message: {errorMessage}</Toast.Body>
+            <Toast.Body className="text-primary">
+              Oops ! Une erreur est survenue veuillez réessayer.
+              <br />
+              Message: {errorMessage}
+            </Toast.Body>
           </Toast>
         </ToastContainer>
       )}
