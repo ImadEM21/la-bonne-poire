@@ -23,7 +23,6 @@ const Offers = ({ userId }) => {
     apis
     .getUserOffers(userId)
     .then(res => {
-        console.log(res);
         setSentOffers(res.data.offers.sent);
         setRecievedOffers(res.data.offers.recieved);
     })
@@ -41,7 +40,6 @@ const Offers = ({ userId }) => {
       apis
         .getUserOffers(userId)
         .then(res => {
-            console.log(res);
             setSentOffers(res.data.offers.sent);
             setRecievedOffers(res.data.offers.recieved);
         })

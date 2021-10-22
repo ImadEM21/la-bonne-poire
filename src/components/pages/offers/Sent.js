@@ -5,7 +5,7 @@ const Sent = ({ offers }) => {
   return (
     <ListGroup>
       {offers.map((offer) => (
-        <SentOffer offer={offer} />
+        <SentOffer offer={offer} key={offer._id} />
       ))}
     </ListGroup>
   );

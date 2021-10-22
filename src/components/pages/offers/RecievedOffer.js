@@ -11,14 +11,18 @@ import {
 } from "react-bootstrap";
 import apis from "../../../api";
 import { useState } from "react";
+import ReactStars from "react-rating-stars-component";
 
 const RecievedOffer = ({ offer, userId, fetchOffers }) => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showAccept, setShowAccept] = useState(false);
   const [showRefuse, setShowRefuse] = useState(false);
+  const [showRating, setShowRating] = useState(false);
   const [success, setSuccess] = useState(false);
   const [disableBtn, setDisableBtn] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [disableRating, setDisableRating] = useState(false);
 
   const showStatus = (status) => {
     switch (status) {
@@ -72,6 +76,21 @@ const RecievedOffer = ({ offer, userId, fetchOffers }) => {
         setDisableBtn(false);
       });
   };
+
+  const handleEvaluate = () => {
+      setDisableRating(true);
+      setError(false);
+      const payload = {
+        rating,
+        userId
+      };
+      apis.updateOffer(offer._id, payload)
+      .then(res => {
+          
+      })
+      .catch();
+  };
+
   return (
     <>
       <ListGroupItem key={offer._id} className="bg-transparent">
@@ -100,19 +119,28 @@ const RecievedOffer = ({ offer, userId, fetchOffers }) => {
               <br />
               Prix initial: <Badge bg="warning">{offer.advert.price}€</Badge>
             </Card.Text>
-            {offer.status === "pending" &&
-            <div className="d-flex justify-content-evenly">
-              <Button
-                variant="outline-dark"
-                onClick={() => setShowRefuse(true)}
-              >
-                Refuser l'offre
-              </Button>
-              <Button variant="primary" onClick={() => setShowAccept(true)}>
-                Accepter l'offre
-              </Button>
-            </div>
-            }
+            {offer.status === "pending" ? (
+              <div className="d-flex justify-content-evenly">
+                <Button
+                  variant="outline-dark"
+                  onClick={() => setShowRefuse(true)}
+                >
+                  Refuser l'offre
+                </Button>
+                <Button variant="primary" onClick={() => setShowAccept(true)}>
+                  Accepter l'offre
+                </Button>
+              </div>
+            ) : (
+              <div className="d-flex justify-content-center">
+                <Button
+                  variant="outline-dark"
+                  onClick={() => setShowRating(true)}
+                >
+                  Notez cette transaction !
+                </Button>
+              </div>
+            )}
           </Card.Body>
         </Card>
       </ListGroupItem>
@@ -192,6 +220,25 @@ const RecievedOffer = ({ offer, userId, fetchOffers }) => {
             onClick={() => handleChangeStatus("refused")}
           >
             Refuser l'offre
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showRating} onHide={() => setShowRating(false)}>
+        <Modal.Header closeButton>Évaluer cette transaction</Modal.Header>
+        <Modal.Body className="d-flex justify-content-center">
+          <ReactStars
+            count={5}
+            onChange={(newRating) => setRating(newRating)}
+            size={24}
+            activeColor="#ffd700"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-dark" onClick={() => setShowRating(false)}>
+            Annuler
+          </Button>
+          <Button variant="dark" disabled={disableRating} onClick={handleEvaluate}>
+            Évaluer
           </Button>
         </Modal.Footer>
       </Modal>
