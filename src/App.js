@@ -13,6 +13,7 @@ import MyAdverts from "./components/pages/myAdverts/MyAdverts";
 import Account from "./components/pages/account/Account";
 import UpdateMyAdvert from "./components/pages/updateAdvert/UpdateMyAdvert";
 import Advert from "./components/pages/adverts/Advert";
+import Offers from "./components/pages/offers/Offers";
 import apis from "./api";
 
 function App() {
@@ -118,7 +119,9 @@ function App() {
               <Route path="/my-adverts" exact>
                 <MyAdverts />
               </Route>
-              <Route path="/offers" exact></Route>
+              <Route path="/offers" exact>
+                <Offers userId={id} />
+              </Route>
               <Route path="/messages" exact></Route>
             </>
           )}

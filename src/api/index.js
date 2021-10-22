@@ -48,6 +48,18 @@ export const updateAdvert = (id, payload) => {
     return api.put(`/adverts/${id}`, payload);
 };
 
+export const makeOffer = (payload) => {
+    return api.post('/offers', payload);
+};
+
+export const getUserOffers = (id) => {
+    return api.get(`/offers/user/${id}`);
+};
+
+export const updateOffer = (id, payload) => {
+    return api.put(`/offers/${id}`, payload);
+};
+
 const apis = {
     getAdverts,
     signup,
@@ -58,7 +70,10 @@ const apis = {
     updateUser,
     getUser,
     getAdvert,
-    updateAdvert
+    updateAdvert,
+    makeOffer,
+    getUserOffers,
+    updateOffer
 };
 
 export default apis;

@@ -1,8 +1,9 @@
-import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { Modal, Button, Form, Row, Col, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import apis from "../../../api";
 
-const Offer = ({ advert, token }) => {
+const Offer = ({ advert, token, userId }) => {
   const [show, setShow] = useState(false);
   const [euros, setEuros] = useState(
     parseInt(advert.price.toFixed(2).split(".")[0])
@@ -10,9 +11,40 @@ const Offer = ({ advert, token }) => {
   const [cents, setCents] = useState(
     parseInt(advert.price.toFixed(2).split(".")[1])
   );
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [disableBtn, setDisableBtn] = useState(false);
 
   const handleSubmit = () => {
-    
+    setDisableBtn(true);
+    setError(false);
+    setSuccess(false);
+    setErrorMessage("");
+    const payload = {
+      from: userId,
+      to: advert.owner._id,
+      advert: advert._id,
+      offer: parseFloat(`${euros}.${cents}`),
+      message,
+      status: "pending",
+      userId: userId,
+    };
+    apis
+      .makeOffer(payload)
+      .then((res) => {
+        setSuccess(true);
+        setDisableBtn(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        console.error(error.response);
+        if (error.response && error.response.data.message)
+          setErrorMessage(error.response.data.message);
+        setError(true);
+        setDisableBtn(false);
+      });
   };
 
   return (
@@ -102,13 +134,64 @@ const Offer = ({ advert, token }) => {
                 />
               </Form.Group>
             </Row>
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="message">
+                <Form.Label className="text-dark">Votre message*</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  className="bg-transparent border-dark text-dark message-offer"
+                  name="message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Votre message ici..."
+                  required
+                  rows={5}
+                />
+              </Form.Group>
+            </Row>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline-info" type="button" onClick={() => setShow(false)}>Annuler</Button>
-          <Button variant="primary" onClick={handleSubmit} className="text-warning">
-            Faire une offre
-          </Button>
+        <Modal.Footer className="d-flex flex-column">
+          {error && (
+            <Alert
+              variant="danger"
+              className="mx-auto"
+              onClose={() => setError(false)}
+              dismissible
+            >
+              Une erreur est survenue. Veuillez réessayer.
+              <br />
+              Message: {errorMessage}
+            </Alert>
+          )}
+          {success && (
+            <Alert
+              variant="success"
+              className="mx-auto"
+              onClose={() => setSuccess(false)}
+              dismissible
+            >
+              Votre offre a bien été envoyé !
+            </Alert>
+          )}
+          <div className="ms-auto">
+            <Button
+              variant="outline-info"
+              className="me-2"
+              type="button"
+              onClick={() => setShow(false)}
+            >
+              Annuler
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleSubmit}
+              className="text-warning"
+              disabled={disableBtn}
+            >
+              Faire une offre
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>

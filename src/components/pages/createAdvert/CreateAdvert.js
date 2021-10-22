@@ -8,7 +8,7 @@ import {
   ToastContainer,
 } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import apis from '../../../api/index';
+import apis from "../../../api/index";
 
 const CreateAdvert = () => {
   const [name, setName] = useState("");
@@ -37,25 +37,33 @@ const CreateAdvert = () => {
       return;
     }
     const payload = new FormData();
-    payload.append('name', name);
-    payload.append('description', description);
-    payload.append('image', image);
-    payload.append('price', parseFloat(`${euros}.${cents}`));
-    payload.append('condition', condition);
-    payload.append('owner', localStorage.getItem(process.env.REACT_APP_USER_ID_NAME));
-    payload.append('userId', localStorage.getItem(process.env.REACT_APP_USER_ID_NAME))
-    apis.createAdvert(payload)
-    .then(res => {
+    payload.append("name", name);
+    payload.append("description", description);
+    payload.append("image", image);
+    payload.append("price", parseFloat(`${euros}.${cents}`));
+    payload.append("condition", condition);
+    payload.append(
+      "owner",
+      localStorage.getItem(process.env.REACT_APP_USER_ID_NAME)
+    );
+    payload.append(
+      "userId",
+      localStorage.getItem(process.env.REACT_APP_USER_ID_NAME)
+    );
+    apis
+      .createAdvert(payload)
+      .then((res) => {
         setSuccess(true);
         setDisableBtn(false);
-    })
-    .catch(error => {
+      })
+      .catch((error) => {
         console.error(error);
-      console.error(error.response);
-      if (error.response && error.response.data.message) setErrorMessage(error.response.data.message);
-      setError(true);
-      setDisableBtn(false);
-    });
+        console.error(error.response);
+        if (error.response && error.response.data.message)
+          setErrorMessage(error.response.data.message);
+        setError(true);
+        setDisableBtn(false);
+      });
   };
 
   const reset = () => {
@@ -260,7 +268,9 @@ const CreateAdvert = () => {
             <Toast.Header closeButton>
               <strong className="me-auto">LaBonnePoire</strong>
             </Toast.Header>
-            <Toast.Body className="text-primary">Bravo ! Votre annonce est désormais en ligne !</Toast.Body>
+            <Toast.Body className="text-primary">
+              Bravo ! Votre annonce est désormais en ligne !
+            </Toast.Body>
           </Toast>
         </ToastContainer>
       )}

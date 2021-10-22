@@ -7,7 +7,6 @@ import {
   Image,
   Spinner,
   Button,
-  Modal
 } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
@@ -79,7 +78,9 @@ const Advert = ({ userId, token }) => {
               <h5 className="btn btn-info text-warning cursor-none mb-0">
                 Prix: <span className="text-dark">{advert.price}€</span>
               </h5>
-              <Offer advert={advert} token={token} />
+              {userId !== advert.owner._id && (
+                <Offer advert={advert} token={token} userId={userId} />
+              )}
             </Col>
           </Row>
           <Row className="mb-4">
@@ -87,21 +88,23 @@ const Advert = ({ userId, token }) => {
               <h5 className="btn btn-info text-warning cursor-none d-flex align-items-center">
                 État: <span className="text-dark">{advert.condition}</span>
               </h5>
-              <Button
-                variant="primary"
-                className="text-warning cursor-none d-flex align-items-center"
-              >
-                Contacter le vendeur{" "}
-                <span className="ms-1 text-dark d-flex align-items-center">
-                  {advert.owner.firstName}{" "}
-                  <Image
-                    src={advert.owner.avatar}
-                    roundedCircle
-                    style={{ height: "2.2rem" }}
-                    className="ms-1"
-                  />
-                </span>
-              </Button>
+              {userId !== advert.owner._id && (
+                <Button
+                  variant="primary"
+                  className="text-warning cursor-none d-flex align-items-center"
+                >
+                  Contacter le vendeur{" "}
+                  <span className="ms-1 text-dark d-flex align-items-center">
+                    {advert.owner.firstName}{" "}
+                    <Image
+                      src={advert.owner.avatar}
+                      roundedCircle
+                      style={{ height: "2.2rem" }}
+                      className="ms-1"
+                    />
+                  </span>
+                </Button>
+              )}
             </Col>
           </Row>
           <Row className="mb-3">
@@ -136,12 +139,13 @@ const Advert = ({ userId, token }) => {
               </Toast>
             </ToastContainer>
           )}
-          <Modal>
-
-          </Modal>
         </Container>
       ) : (
-        <Spinner animation="grow" />
+        <Spinner
+          animation="grow"
+          className="align-self-center mt-auto"
+          variant="primary"
+        />
       )}
     </>
   );

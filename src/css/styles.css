@@ -63,3 +63,10 @@ input:focus, textarea:focus, select:focus {
     outline: none;
 }
 
+.message-offer::placeholder {
+    color: rgba(138, 48, 51, .75);
+}
+
+.nav-tabs .nav-link {
+    color: #8a3033 !important;
+}

@@ -334,7 +334,7 @@ const Account = ({ user, fetchUser }) => {
             </Form>
           ) : (
             <>
-              <Spinner animation="grow" />
+              <Spinner animation="grow" className="align-self-center mt-auto" variant="primary" />
             </>
           )}
           {passwordEquality && (
