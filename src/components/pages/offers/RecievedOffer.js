@@ -21,8 +21,11 @@ const RecievedOffer = ({ offer, userId, fetchOffers }) => {
   const [showRating, setShowRating] = useState(false);
   const [success, setSuccess] = useState(false);
   const [disableBtn, setDisableBtn] = useState(false);
-  const [rating, setRating] = useState(0);
+  const [sellerRating, setSellerRating] = useState(offer.sellerRating ? offer.sellerRating : 0);
   const [disableRating, setDisableRating] = useState(false);
+  const [successRating, setSuccessRating] = useState(false);
+  const [errorRating, setErrorRating] = useState(false);
+  const [errorRatingMessage, setErrorRatingMessage] = useState("");
 
   const showStatus = (status) => {
     switch (status) {
@@ -78,17 +81,26 @@ const RecievedOffer = ({ offer, userId, fetchOffers }) => {
   };
 
   const handleEvaluate = () => {
-      setDisableRating(true);
-      setError(false);
-      const payload = {
-        rating,
-        userId
-      };
-      apis.updateOffer(offer._id, payload)
-      .then(res => {
-          
+    setDisableRating(true);
+    setErrorRating(false);
+    const payload = {
+      sellerRating,
+      userId,
+    };
+    apis
+      .updateOffer(offer._id, payload)
+      .then((res) => {
+        setSuccessRating(true);
+        fetchOffers();
       })
-      .catch();
+      .catch((error) => {
+        console.error(error);
+        console.error(error.response);
+        if (error.response && error.response.data.message)
+          setErrorRatingMessage(error.response.data.message);
+        setErrorRating(true);
+        setDisableRating(false);
+      });
   };
 
   return (
@@ -133,12 +145,22 @@ const RecievedOffer = ({ offer, userId, fetchOffers }) => {
               </div>
             ) : (
               <div className="d-flex justify-content-center">
-                <Button
-                  variant="outline-dark"
-                  onClick={() => setShowRating(true)}
-                >
-                  Notez cette transaction !
-                </Button>
+                {offer.sellerRating ? (
+                  <ReactStars
+                    count={5}
+                    edit={false}
+                    size={24}
+                    activeColor="#ffd700"
+                    value={sellerRating}
+                  />
+                ) : (
+                  <Button
+                    variant="outline-dark"
+                    onClick={() => setShowRating(true)}
+                  >
+                    Notez cette transaction !
+                  </Button>
+                )}
               </div>
             )}
           </Card.Body>
@@ -225,19 +247,38 @@ const RecievedOffer = ({ offer, userId, fetchOffers }) => {
       </Modal>
       <Modal show={showRating} onHide={() => setShowRating(false)}>
         <Modal.Header closeButton>Évaluer cette transaction</Modal.Header>
-        <Modal.Body className="d-flex justify-content-center">
+        <Modal.Body className="d-flex flex-column align-items-center justify-content-center">
           <ReactStars
             count={5}
-            onChange={(newRating) => setRating(newRating)}
+            onChange={(newRating) => setSellerRating(newRating)}
             size={24}
             activeColor="#ffd700"
+            value={sellerRating}
           />
+          <div className="mt-2">
+            {errorRating && (
+              <Alert variant="danger">
+                Oops ! Une erreur est survenue veuillez recharger la page.
+                <br />
+                Message: {errorRatingMessage}
+              </Alert>
+            )}
+            {successRating && (
+              <Alert variant="success">
+                Votre évaluation a bien été enregistré. Merci !
+              </Alert>
+            )}
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-dark" onClick={() => setShowRating(false)}>
             Annuler
           </Button>
-          <Button variant="dark" disabled={disableRating} onClick={handleEvaluate}>
+          <Button
+            variant="dark"
+            disabled={disableRating}
+            onClick={handleEvaluate}
+          >
             Évaluer
           </Button>
         </Modal.Footer>

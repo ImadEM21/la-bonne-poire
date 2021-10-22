@@ -21,27 +21,27 @@ const Offers = ({ userId }) => {
 
   const fetchOffers = () => {
     apis
-    .getUserOffers(userId)
-    .then(res => {
+      .getUserOffers(userId)
+      .then((res) => {
         setSentOffers(res.data.offers.sent);
         setRecievedOffers(res.data.offers.recieved);
-    })
-    .catch((error) => {
-      console.error(error);
-      console.error(error.response);
-      if (error.response && error.response.data.message)
-        setErrorMessage(error.response.data.message);
-      setError(true);
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+        console.error(error.response);
+        if (error.response && error.response.data.message)
+          setErrorMessage(error.response.data.message);
+        setError(true);
+      });
   };
 
   useEffect(() => {
     const getOffers = () => {
       apis
         .getUserOffers(userId)
-        .then(res => {
-            setSentOffers(res.data.offers.sent);
-            setRecievedOffers(res.data.offers.recieved);
+        .then((res) => {
+          setSentOffers(res.data.offers.sent);
+          setRecievedOffers(res.data.offers.recieved);
         })
         .catch((error) => {
           console.error(error);
@@ -79,10 +79,26 @@ const Offers = ({ userId }) => {
               title="Offres envoyées"
               tabClassName="text-dark"
             >
-              {sentOffers && <Sent offers={sentOffers} userId={userId} fetchOffers={fetchOffers} />}
+              {sentOffers && (
+                <Sent
+                  offers={sentOffers}
+                  userId={userId}
+                  fetchOffers={fetchOffers}
+                />
+              )}
             </Tab>
-            <Tab eventKey="recieved" title="Offres reçues" tabClassName="text-dark">
-              {recievedOffers && <Recieved offers={recievedOffers} userId={userId} fetchOffers={fetchOffers} />}
+            <Tab
+              eventKey="recieved"
+              title="Offres reçues"
+              tabClassName="text-dark"
+            >
+              {recievedOffers && (
+                <Recieved
+                  offers={recievedOffers}
+                  userId={userId}
+                  fetchOffers={fetchOffers}
+                />
+              )}
             </Tab>
           </Tabs>
         </Col>
